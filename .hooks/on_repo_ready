@@ -1,4 +1,5 @@
 #!/bin/bash
+UNAME=$(uname)
 
 if [ "$UNAME" != "Darwin" ]; then
     cd .. && uju export --ref=master /var/www/html
