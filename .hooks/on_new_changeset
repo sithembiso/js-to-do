@@ -1,0 +1,18 @@
+#!/bin/bash
+
+FILE="$4"
+DIR=$(pwd)
+DIR="$DIR/.."
+UNAME=$(uname)
+
+if [ "$UNAME" == "Darwin" ]; then
+    out=$(docker run --rm --env RAW_FILE_ARRAY=$FILE --env WORKSPACE=/tmp/lint --env DEBUG=false -v $DIR:/tmp/lint lepsta/superlinter:latest 2>&1)
+    exit_status=$?
+    out=$(echo "$out" | base64)
+
+    if [ $exit_status -eq 1 ]; then
+        echo "{\"id\": \"LepstaLinter\", \"output\": \"base64:$out\", \"score\": -1}"
+    else
+        echo "{\"id\": \"LepstaLinter\", \"output\": \"base64:$out\", \"score\": 1}"
+    fi
+fi
